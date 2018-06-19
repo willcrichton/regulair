@@ -7,6 +7,11 @@ from loam.boards.icestick import IceStick
 from rx import *
 from nfa import *
 
+def char_input(string):
+    counter = Counter(9)
+    tab = [ord(string[i]) for i in range(len(string))]
+    rom = Memory(height=512, width=8, rom=sintab, readonly=True)
+    return rom(counter)
 
 def to_fpga(rx):
     nfa = NFA(rx)
