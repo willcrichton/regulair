@@ -9,11 +9,14 @@ from rx import *
 from nfa import *
 from matcher import Matcher
 
+
 def char_input(string):
+    string += '\0'
     counter = Counter(9)
     tab = [ord(string[i]) for i in range(len(string))]
-    rom = Memory(height=512, width=8, rom=sintab, readonly=True)
+    rom = Memory(height=512, width=8, rom=tab, readonly=True)
     return rom(counter)
+
 
 def to_fpga(rx):
 
@@ -22,11 +25,13 @@ def to_fpga(rx):
 
     main = icestick.DefineMain()
 
+    inp = char_input('zzxy')
     matcher = Matcher(rx)
 
-    # TODO: James fill this in
-    charin = m.uint(ord('x'), 8)
-    m.wire(charin, matcher.char)
+    m.wire(inp, matcher.char)
+
+    m.wire(matcher.match, ??)
+    m.wire(matcher.done, ??)
 
     m.EndDefine()
 
