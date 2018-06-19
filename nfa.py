@@ -1,12 +1,14 @@
 from rx import *
 from collections import defaultdict
 
+
 class State(object):
     def __init__(self):
         self._transitions = defaultdict(list)
 
     def add_transition(self, inp, state):
         self._transitions[inp].append(state)
+
 
 class NFA(object):
     def __init__(self, rx):
@@ -44,9 +46,7 @@ class NFA(object):
             f1.add_transition(EPSILON, q1)
 
         return (q, f)
-            
-            
+
 
 if __name__ == '__main__':
     nfa = NFA(Star(C('x') | C('y')) & C('z'))
-
