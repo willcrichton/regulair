@@ -18,8 +18,10 @@ all: $(NAME).bin
 %.blif: %.v
 	yosys $(QUIET) -p 'synth_ice40 -top main -blif $@' $<
 
-%.v: ../%.py
-	python3 $<
+%.v: FORCE
+	python3 ../regulair.py
+
+FORCE:
 
 %.rpt: %.txt
 	icetime -d hx$(DEVICE) -mtr $@ $<

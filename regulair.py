@@ -7,6 +7,7 @@ from loam.boards.icestick import IceStick
 
 from rx import *
 from nfa import *
+from matcher import Matcher
 
 def char_input(string):
     counter = Counter(9)
@@ -21,11 +22,11 @@ def to_fpga(rx):
 
     main = icestick.DefineMain()
 
-    charin = ()
-    (i, o) = rx.to_circuit(charin)
+    matcher = Matcher(rx)
 
-    # m.wire(Constant(1).O, i)
-    # m.wire(o, ???)
+    # TODO: James fill this in
+    charin = m.uint(ord('x'), 8)
+    m.wire(charin, matcher.char)
 
     m.EndDefine()
 

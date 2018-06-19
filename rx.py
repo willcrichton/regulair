@@ -1,8 +1,14 @@
 from abc import ABC
 import mantle
 import magma as m
+from character_matcher import CharacterMatcher
 
 EPSILON = ''
+
+
+def multi_wire(inp, out):
+    for o in out:
+        m.wire(inp, o)
 
 
 class Expr(ABC):
@@ -26,9 +32,9 @@ class C(Expr):
         ff = mantle.DFF()
         m.wire(ff.O, and_.I0)
 
-        # comparator = ()
-        # m.wire(charin, comparator.I)
-        # m.wire(comparator.O, and_.I1)
+        matcher = CharacterMatcher(self._c)
+        m.wire(charin, matcher.char)
+        m.wire(matcher.match, and_.I1)
 
         return (ff.I, and_.O)
 
@@ -45,7 +51,11 @@ class Or(Expr):
         or_ = mantle.Or(2)
         or_(lo, ro)
 
-        return ([li, ri], or_.O)
+        b = m.Bit()
+        m.wire(b, li)
+        m.wire(b, ri)
+
+        return (b, or_.O)
 
 
 class And(Expr):
@@ -60,7 +70,11 @@ class And(Expr):
         and_ = mantle.And(2)
         and_(lo, ro)
 
-        return ([li, ri], or_.O)
+        b = m.Bit()
+        m.wire(b, li)
+        m.wire(b, ri)
+
+        return (b, or_.O)
 
 
 class Star(Expr):
@@ -77,7 +91,11 @@ class Star(Expr):
         m.wire(o, andout.I1)
         m.wire(andin.O, i)
 
-        return ([andin.I0, andout.I0], andout.O)
+        b = m.Bit()
+        m.wire(b, andin.I0)
+        m.wire(b, andout.I0)
+
+        return (b, andout.O)
 
 
 if __name__ == '__main__':
