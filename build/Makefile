@@ -36,6 +36,6 @@ clean:
 	rm -f *.bin *.txt *.blif *.rpt *.v *.pcf
 
 
-.PRECIOUS: %.bin %.txt %.blif
+.PRECIOUS: %.bin %.txt %.blif %.v
 
 .PHONY: all explain install clean

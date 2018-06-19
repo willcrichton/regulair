@@ -6,11 +6,6 @@ from character_matcher import CharacterMatcher
 EPSILON = ''
 
 
-def multi_wire(inp, out):
-    for o in out:
-        m.wire(inp, o)
-
-
 class Expr(ABC):
     def to_circuit(self, charin):
         raise NotImplemented
@@ -74,7 +69,7 @@ class And(Expr):
         m.wire(b, li)
         m.wire(b, ri)
 
-        return (b, or_.O)
+        return (b, and_.O)
 
 
 class Star(Expr):
@@ -84,18 +79,18 @@ class Star(Expr):
     def to_circuit(self, charin):
         (i, o) = self._rx.to_circuit(charin)
 
-        andin = mantle.And(2)
-        andout = mantle.And(2)
+        orin = mantle.Or(2)
+        orout = mantle.Or(2)
 
-        m.wire(o, andin.I1)
-        m.wire(o, andout.I1)
-        m.wire(andin.O, i)
+        m.wire(o, orin.I1)
+        m.wire(o, orout.I1)
+        m.wire(orin.O, i)
 
         b = m.Bit()
-        m.wire(b, andin.I0)
-        m.wire(b, andout.I0)
+        m.wire(b, orin.I0)
+        m.wire(b, orout.I0)
 
-        return (b, andout.O)
+        return (b, orout.O)
 
 
 if __name__ == '__main__':
