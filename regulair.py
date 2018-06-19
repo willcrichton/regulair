@@ -1,7 +1,7 @@
 import magma as m
 m.set_mantle_target("ice40")
 
-from mantle import Counter
+import mantle
 from loam.boards.icestick import IceStick
 
 from rx import *
@@ -14,14 +14,17 @@ def char_input(string):
     return rom(counter)
 
 def to_fpga(rx):
-    nfa = NFA(rx)
 
     icestick = IceStick()
     icestick.Clock.on()
 
     main = icestick.DefineMain()
 
-    # TODO
+    charin = ()
+    (i, o) = rx.to_circuit(charin)
+
+    # m.wire(Constant(1).O, i)
+    # m.wire(o, ???)
 
     m.EndDefine()
 
@@ -29,5 +32,6 @@ def to_fpga(rx):
 
 
 if __name__ == '__main__':
-    rx = Star(C('x') | C('y')) & C('z')
+    #rx = Star(C('x') | C('y')) & C('z')
+    rx = C('x') | C('y')
     to_fpga(rx)
