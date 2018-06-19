@@ -2,6 +2,7 @@ import magma as m
 m.set_mantle_target("ice40")
 
 import mantle
+from mantle import Counter, Memory
 from loam.boards.icestick import IceStick
 
 from rx import *
