@@ -1,13 +1,14 @@
 from abc import ABC
-import mantle
 import magma as m
+import mantle
 from character_matcher import CharacterMatcher
+
 
 EPSILON = ''
 
 
 class Expr(ABC):
-    def to_circuit(self, charin):
+    def to_circuit(self, char_in):
         raise NotImplemented
 
     def __or__(self, other):
@@ -21,14 +22,14 @@ class C(Expr):
     def __init__(self, c):
         self._c = c
 
-    def to_circuit(self, charin):
+    def to_circuit(self, char_in):
         and_ = mantle.And(2)
 
         ff = mantle.DFF()
         m.wire(ff.O, and_.I0)
 
         matcher = CharacterMatcher(self._c)
-        m.wire(charin, matcher.char)
+        m.wire(char_in, matcher.char)
         m.wire(matcher.match, and_.I1)
 
         return (ff.I, and_.O)
@@ -39,9 +40,9 @@ class Or(Expr):
         self._l = l
         self._r = r
 
-    def to_circuit(self, charin):
-        (li, lo) = self._l.to_circuit(charin)
-        (ri, ro) = self._l.to_circuit(charin)
+    def to_circuit(self, char_in):
+        (li, lo) = self._l.to_circuit(char_in)
+        (ri, ro) = self._l.to_circuit(char_in)
 
         or_ = mantle.Or(2)
         or_(lo, ro)
@@ -58,9 +59,9 @@ class And(Expr):
         self._l = l
         self._r = r
 
-    def to_circuit(self, charin):
-        (li, lo) = self._l.to_circuit(charin)
-        (ri, ro) = self._l.to_circuit(charin)
+    def to_circuit(self, char_in):
+        (li, lo) = self._l.to_circuit(char_in)
+        (ri, ro) = self._l.to_circuit(char_in)
 
         and_ = mantle.And(2)
         and_(lo, ro)
@@ -73,11 +74,11 @@ class And(Expr):
 
 
 class Star(Expr):
-    def __init__(self, rx):
-        self._rx = rx
+    def __init__(self, regex):
+        self._regex = regex
 
-    def to_circuit(self, charin):
-        (i, o) = self._rx.to_circuit(charin)
+    def to_circuit(self, char_in):
+        (i, o) = self._regex.to_circuit(char_in)
 
         orin = mantle.Or(2)
         orout = mantle.Or(2)

@@ -1,14 +1,11 @@
+import math
+
 import magma as m
 m.set_mantle_target("ice40")
 
-import mantle
 from mantle import Counter, Memory
 from loam.boards.icestick import IceStick
-
-import math
-
-from rx import *
-from nfa import *
+from regex import *
 from matcher import Matcher
 
 
@@ -28,7 +25,6 @@ def to_fpga(rx):
     icestick = IceStick()
     icestick.Clock.on()
     icestick.D1.on()
-    #icestick.D2.on()
 
     main = icestick.DefineMain()
 
@@ -37,7 +33,6 @@ def to_fpga(rx):
 
     m.wire(rom, matcher.char)
     m.wire(matcher.match, main.D1)
-    #m.wire(matcher.done, main.D2)
 
     m.EndDefine()
 
@@ -45,6 +40,5 @@ def to_fpga(rx):
 
 
 if __name__ == '__main__':
-    #rx = Star(C('x') | C('y')) & C('z')
-    rx = C('x') #| C('y')
+    rx = C('x')
     to_fpga(rx)
